@@ -18,6 +18,7 @@ var client = mc.createClient({
 
 client.on('connect', function() {
   console.info('connected');
+  // a few seconds after logging in, use the fishing rod in the main hand
   setTimeout(useItem, 5000, 0);
 });
 
@@ -31,15 +32,21 @@ client.on('end', function(err) {
   process.exit(1);
 });
 
+// This may change in the future, but I deduced that when a fishing bobber does its thing
+// when a fish is on the hook, the server sends a 'world_particles' packet with a particleId
+// of 4. So time to try to catch the fist.
 client.on('world_particles', function(packet) {
   if (packet.particleId == 4) {
     console.log('fish on');
+    // use the fishing rod to attempt to catch the fish
     useItem();
+    // a few moments later, use it again to re-cast
     setTimeout(useItem, 500);
     fishCount++;
   }
 });
 
+// respond to chat messages about how the fishing has been
 client.on('chat', function(packet) {
   var jsonMsg = JSON.parse(packet.message);
   if(jsonMsg.translate == 'chat.type.announcement' || jsonMsg.translate == 'chat.type.text') {
@@ -51,10 +58,6 @@ client.on('chat', function(packet) {
     }
   }
 });
-
-function setQuickBarSlot(slot) {
-  client.write('held_item_slot', { slotId: slot });
-}
 
 function useItem() {
   client.write('use_item', { hand : 0 });
