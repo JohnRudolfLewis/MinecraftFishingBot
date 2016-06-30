@@ -1,4 +1,7 @@
 var mc = require('minecraft-protocol');
+var moment = require('moment');
+var start = moment();
+var fishCount = 0;
 
 if(process.argv.length < 4 || process.argv.length > 6) {
   console.log("Usage : node echo.js <host> <port> [<name>] [<password>]");
@@ -29,6 +32,19 @@ client.on('world_particles', function(packet) {
     console.log('fish on');
     useItem();
     setTimeout(useItem, 500);
+    fishCount++;
+  }
+});
+
+client.on('chat', function(packet) {
+  var jsonMsg = JSON.parse(packet.message);
+  if(jsonMsg.translate == 'chat.type.announcement' || jsonMsg.translate == 'chat.type.text') {
+    var username = jsonMsg.with[0].text;
+    var msg = jsonMsg.with[1];
+    if(username === client.username) return;
+    if (msg.indexOf('fish') > -1) {
+      howsFishing();
+    }
   }
 });
 
@@ -38,4 +54,8 @@ function setQuickBarSlot(slot) {
 
 function useItem() {
   client.write('use_item', { hand : 0 });
+}
+
+function howsFishing() {
+  client.write('chat', {message: 'I\'ve been fishin since ' + start.fromNow() + ' and caught ' + fishCount + ' fish.'});
 }
