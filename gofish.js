@@ -42,7 +42,7 @@ client.on('chat', function(packet) {
     var username = jsonMsg.with[0].text;
     var msg = jsonMsg.with[1];
     if(username === client.username) return;
-    if (msg.indexOf('fish') > -1) {
+    if (msg == 'how\'s the fishing?') {
       howsFishing();
     }
   }
@@ -57,5 +57,5 @@ function useItem() {
 }
 
 function howsFishing() {
-  client.write('chat', {message: 'I\'ve been fishin since ' + start.fromNow() + ' and caught ' + fishCount + ' fish.'});
+  client.write('chat', {message: 'I\'ve been fishing for about ' + start.fromNow(true) + ' and have caught ' + fishCount + ' items.'});
 }
