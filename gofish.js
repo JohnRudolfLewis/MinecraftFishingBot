@@ -20,11 +20,15 @@ client.on('connect', function() {
   console.info('connected');
   setTimeout(useItem, 5000, 0);
 });
+
 client.on('disconnect', function(packet) {
   console.log('disconnected: '+ packet.reason);
+  process.exit(1);
 });
+
 client.on('end', function(err) {
   console.log('Connection lost');
+  process.exit(1);
 });
 
 client.on('world_particles', function(packet) {
