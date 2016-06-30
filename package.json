@@ -1,0 +1,9 @@
+{
+  "name": "node-minecraft-protocol-fishing",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "minecraft-protocol": "^1.0.0"
+  },
+  "description": "A node-minecraft-protocol fishing bot"
+}
